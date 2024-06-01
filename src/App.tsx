@@ -1,17 +1,16 @@
 import React from 'react';
-import main from './assets/images/main.png';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import './App.css';
+import Home from './pages/Home';
+import AppPaths from "./config/AppPaths";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={main} className="App-logo" alt="logo" />
-        <p>
-          КНИГА ПАМ’ЯТІ ЛЕМКІВЩИНИ 1944-1946
-        </p>
-      </header>
-    </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path={AppPaths.home} element={<Home />} />
+        </Routes>
+      </BrowserRouter>
   );
 }
 
