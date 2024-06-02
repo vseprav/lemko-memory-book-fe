@@ -27,7 +27,7 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
                                     alt="logo"
                                 />
                             </Link>
-                            <ul className="navbar-nav">
+                            <ul className="nav justify-content-end" style={{width: '100%'}}>
                                 <li className="nav-item">
                                 <Link to={AppPaths.about} className="nav-link">{t('navbar.about')}</Link>
                                 </li>
