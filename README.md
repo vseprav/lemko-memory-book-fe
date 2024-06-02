@@ -5,7 +5,10 @@ https://www.figma.com/file/lbIpFHlI1P5CULS9Rqhi4V/Now?type=design&node-id=1-5&mo
 https://nice-flower-0e497db03.5.azurestaticapps.net/
 
 # env vars
-`export API_URL=https://memorybookbe.azurewebsites.net`
+add .env file to the root of the project with the following content:
+```
+REACT_APP_API_URL=https://memorybookbe.azurewebsites.net
+```
 
 # Getting Started with Create React App
 
