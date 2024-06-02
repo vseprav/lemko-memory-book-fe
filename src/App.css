@@ -4,3 +4,8 @@ main {
 footer {
   min-height: 10vh;
 }
+
+.search-input::placeholder {
+  color: #BFBEBE !important;
+  font-size: 14px;
+}

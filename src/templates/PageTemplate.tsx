@@ -15,7 +15,7 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="container-fluid">
+        <div className="container-xxl">
             <div className="row mx-2">
                 <div className="col-12">
                     <nav className="navbar navbar-expand-lg navbar-light">
@@ -24,7 +24,7 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
                                 <img
                                     width="180"
                                     height="73"
-                                    src={`${process.env.PUBLIC_URL}/logo.png`}
+                                    src={`${process.env.PUBLIC_URL}/images/logo.png`}
                                     alt="logo"
                                 />
                             </Link>
@@ -40,10 +40,10 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
                 </div>
             </div>
             <div className="row mx-2">
-                <main className="col-9">
+                <main className="col-8">
                     {content}
                 </main>
-                <aside className="col-3">
+                <aside className="col-4">
                     {sidebar}
                 </aside>
             </div>
