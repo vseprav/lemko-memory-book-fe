@@ -1,6 +1,9 @@
 import React, { FC, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {Link} from "react-router-dom";
+import AppPaths from "../config/AppPaths";
+import colors from "../theme/colors";
 
 
 interface PageTemplateProps {
@@ -16,12 +19,17 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
                 <div className="col-12">
                     <nav className="navbar navbar-expand-lg navbar-light bg-light">
                         <div className="collapse navbar-collapse" id="navbarNav">
+                            <Link to={AppPaths.home} className="navbar-brand">
+                                <img
+                                    width="180"
+                                    height="73"
+                                    src={`${process.env.PUBLIC_URL}/logo.png`}
+                                    alt="logo"
+                                />
+                            </Link>
                             <ul className="navbar-nav">
                                 <li className="nav-item">
-                                    <a className="nav-link active" aria-current="page" href="#">{t('navbar.home')}</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link active" aria-current="page" href="#">{t('navbar.about')}</a>
+                                <Link to={AppPaths.about} className="nav-link">{t('navbar.about')}</Link>
                                 </li>
                             </ul>
                         </div>
@@ -37,7 +45,7 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
                 </aside>
             </div>
             <div className="row">
-                <footer className="col-12 bg-light text-center py-3">
+                <footer className="col-12 text-center py-3" style={{backgroundColor: colors.black}}>
                     <p>{t('footer.text')}</p>
                 </footer>
             </div>
