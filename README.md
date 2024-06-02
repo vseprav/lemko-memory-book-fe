@@ -4,6 +4,9 @@ https://www.figma.com/file/lbIpFHlI1P5CULS9Rqhi4V/Now?type=design&node-id=1-5&mo
 # dev app url
 https://nice-flower-0e497db03.5.azurestaticapps.net/
 
+# env vars
+`export API_URL=https://memorybookbe.azurewebsites.net`
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
