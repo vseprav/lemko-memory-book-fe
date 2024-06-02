@@ -1,3 +1,6 @@
 main {
-  min-height: 70vh; /* Adjust the minimum height as needed */
+  min-height: 80vh;
+}
+footer {
+  min-height: 10vh;
 }

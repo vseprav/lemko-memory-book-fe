@@ -16,7 +16,7 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
 
     return (
         <div className="container-fluid">
-            <div className="row">
+            <div className="row mx-2">
                 <div className="col-12">
                     <nav className="navbar navbar-expand-lg navbar-light">
                         <div className="collapse navbar-collapse" id="navbarNav">
@@ -39,7 +39,7 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
                     </nav>
                 </div>
             </div>
-            <div className="row">
+            <div className="row mx-2">
                 <main className="col-9">
                     {content}
                 </main>
