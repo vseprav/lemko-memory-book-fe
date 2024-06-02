@@ -8,7 +8,7 @@ interface PageTemplateProps {
     sidebar: ReactElement;
 }
 const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <div className="container-fluid">
