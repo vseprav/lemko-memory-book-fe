@@ -9,7 +9,7 @@ const Home = () => {
   const {t} = useTranslation();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchItem[] | null>(null);
 
   const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setSearchQuery(event.target.value);
@@ -32,6 +32,11 @@ const Home = () => {
                 className="form-control search-input"
                 placeholder={t('home.searchPlaceholder')}
                 onChange={handleChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
               />
             </div>
             <div className="col-4">
@@ -44,12 +49,13 @@ const Home = () => {
           <div className="row mt-4">
             <div className="col-12">
               <ol className="list-group list-group-flush">
-                {searchResults.length > 0 && searchResults.map((item) => (
+                {searchResults && searchResults.map((item) => (
                   <li className='list-group-item' key={item.id}>
                     <span className='fw-bold'>{item.full_name}</span>
-                    ({item.birth_year}) - {item.settlement}, {item.area_eviction}, {item.family_role}
+                    ({item.birth_year} {t('home.rn')}) - {item.settlement}, {item.area_eviction}, {item.family_role}
                   </li>
                 ))}
+                {searchResults && searchResults.length === 0 && <li className='list-group-item'>{t('home.noResults')}</li>}
               </ol>
             </div>
           </div>
