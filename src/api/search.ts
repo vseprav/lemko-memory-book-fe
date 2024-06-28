@@ -13,4 +13,19 @@ const searchApi = async (query: string) => {
   return await res.json() as SearchItem[];
 }
 
+export const findUniqueSettlementsAndEvictions = (items: SearchItem[]): { lastNames: string[], areaEvictions: string[] } => {
+  const uniqueLastNames = new Set<string>();
+  const uniqueAreaEvictions = new Set<string>();
+
+  items.forEach(item => {
+    uniqueLastNames.add(item.full_name.split(' ')[0].trim());
+    uniqueAreaEvictions.add(item.area_eviction);
+  });
+
+  return {
+    lastNames: Array.from(uniqueLastNames),
+    areaEvictions: Array.from(uniqueAreaEvictions),
+  };
+}
+
 export default searchApi;
