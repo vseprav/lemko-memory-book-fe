@@ -1,4 +1,4 @@
-export interface SearchItem {
+export interface PersonItem {
   id: string;
   family_uuid: string;
   full_name: string;
@@ -10,10 +10,10 @@ export interface SearchItem {
 
 const searchApi = async (query: string) => {
   const res = await fetch(`${process.env.REACT_APP_API_URL}/search/evicted_persons?query=${query}`);
-  return await res.json() as SearchItem[];
+  return await res.json() as PersonItem[];
 }
 
-export const findUniqueSettlementsAndEvictions = (items: SearchItem[]): { lastNames: string[], areaEvictions: string[] } => {
+export const findUniqueSettlementsAndEvictions = (items: PersonItem[]): { lastNames: string[], areaEvictions: string[] } => {
   const uniqueLastNames = new Set<string>();
   const uniqueAreaEvictions = new Set<string>();
 

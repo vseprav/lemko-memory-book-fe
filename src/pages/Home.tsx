@@ -2,8 +2,7 @@ import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
 import SidebarTemplate from "../templates/SidebarTemplate";
 import {SetStateAction, useState} from "react";
-import searchApi, {findUniqueSettlementsAndEvictions, SearchItem} from "../api/search";
-import AppPaths from "../config/AppPaths";
+import searchApi, {findUniqueSettlementsAndEvictions, PersonItem} from "../api/search";
 import {useNavigate} from "react-router-dom";
 
 
@@ -12,7 +11,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchItem[] | null>(null);
+  const [searchResults, setSearchResults] = useState<PersonItem[] | null>(null);
   const [searchResultsCount, setSearchResultsCount] = useState<number>(0);
   const [uniqueAreaEvictions, setUniqueAreaEvictions] = useState<string>('');
   const [uniqueLastNames, setUniqueLastNames] = useState<string>('');
