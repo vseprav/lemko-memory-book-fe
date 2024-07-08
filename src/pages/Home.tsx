@@ -3,10 +3,13 @@ import {useTranslation} from "react-i18next";
 import SidebarTemplate from "../templates/SidebarTemplate";
 import {SetStateAction, useState} from "react";
 import searchApi, {findUniqueSettlementsAndEvictions, SearchItem} from "../api/search";
+import AppPaths from "../config/AppPaths";
+import {useNavigate} from "react-router-dom";
 
 
 const Home = () => {
   const {t} = useTranslation();
+  const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchItem[] | null>(null);
@@ -72,7 +75,7 @@ const Home = () => {
                 </div>}
             <ol className="list-group list-group-flush">
               {searchResults && searchResults.map((item) => (
-                <li className='list-group-item' key={item.id}>
+                <li className='list-group-item cursor-pointer' key={item.id} onClick={() => navigate(`/family/${item.family_uuid}`)}>
                   <span className='fw-bold'>{item.full_name}</span>
                   &nbsp;({item.birth_year} {t('home.rn')}), {t('home.settlement')} - {item.settlement}
                 </li>

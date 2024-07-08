@@ -4,6 +4,7 @@ import './App.css';
 import Home from './pages/Home';
 import AppPaths from "./config/AppPaths";
 import About from "./pages/About";
+import Family from "./pages/Family";
 
 function App() {
     return (
@@ -11,6 +12,7 @@ function App() {
             <Routes>
                 <Route path={AppPaths.home} element={<Home/>}/>
                 <Route path={AppPaths.about} element={<About/>}/>
+                <Route path={AppPaths.family} element={<Family/>}/>
             </Routes>
         </BrowserRouter>
     );
