@@ -5,6 +5,7 @@ import {useParams} from "react-router-dom";
 import {getFamilyById} from "../api/getFamilyById";
 import {useEffect, useState} from "react";
 import {PersonItem} from "../api/search";
+import LoadingSpinner from "../templates/LoadingSpinner";
 
 const Family = () => {
   const {t} = useTranslation();
@@ -21,6 +22,9 @@ const Family = () => {
   return (
     <PageTemplate content={
       <div className='col-12'>
+        {family.length === 0 && (
+          <LoadingSpinner/>
+        )}
         {family.length > 0 && (
           <>
             <h1>{t('family.familyName')}</h1>

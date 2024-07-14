@@ -1,33 +1,59 @@
 import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
 import SidebarTemplate from "../templates/SidebarTemplate";
-import {SetStateAction, useState} from "react";
+import {SetStateAction, useEffect, useState} from "react";
 import searchApi, {findUniqueSettlementsAndEvictions, PersonItem} from "../api/search";
 import {useNavigate} from "react-router-dom";
+import {useQuery} from "../hooks/useQuery";
+import SearchResults from "../templates/SearchResults";
 
 
 const Home = () => {
   const {t} = useTranslation();
   const navigate = useNavigate();
+  const query = useQuery();
+  const queryName = 'search';
+  const search = query.get(queryName);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(search || '');
   const [searchResults, setSearchResults] = useState<PersonItem[] | null>(null);
   const [searchResultsCount, setSearchResultsCount] = useState<number>(0);
   const [uniqueAreaEvictions, setUniqueAreaEvictions] = useState<string>('');
   const [uniqueLastNames, setUniqueLastNames] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const setQueryParam = (key: string, value: string) => {
+    const searchParams = new URLSearchParams(query.toString());
+    searchParams.set(key, value);
+    navigate({search: searchParams.toString()});
+  };
 
   const handleChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setSearchQuery(event.target.value);
+    setQueryParam(queryName, event.target.value as string);
   };
 
   const handleSearch = async () => {
+    setLoading(true);
     const res = await searchApi(searchQuery);
+    setLoading(false);
     const uniqueValues = findUniqueSettlementsAndEvictions(res);
     setSearchResults(res);
     setSearchResultsCount(res.length);
     setUniqueAreaEvictions(uniqueValues.areaEvictions.join(', '));
     setUniqueLastNames(uniqueValues.lastNames.join(', '));
   };
+
+  useEffect(() => {
+    if (search) {
+      handleSearch();
+    } else {
+      setSearchResults([]);
+      setSearchResultsCount(0);
+      setUniqueAreaEvictions('');
+      setUniqueLastNames('');
+    }
+  }, [searchQuery]);
 
   return (
     <PageTemplate content={
@@ -40,6 +66,7 @@ const Home = () => {
               id="inputText"
               className="form-control search-input"
               placeholder={t('home.searchPlaceholder')}
+              value={searchQuery}
               onChange={handleChange}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -56,33 +83,12 @@ const Home = () => {
           </div>
         </div>
         <div className="row mt-4">
-          <div className="col-12">
-            {searchResults && searchResults.length > 0 &&
-                <div className="result-count mx-3 mb-5">
-                    <div className="row">
-                        <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.found')}</span></div>
-                        <div className="col-lg-9 col-5">{searchResultsCount} {t('home.people')}</div>
-                    </div>
-                    <div className="row">
-                        <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.areaEviction')}</span></div>
-                        <div className="col-lg-9 col-5">{uniqueAreaEvictions}</div>
-                    </div>
-                    <div className="row">
-                        <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.foundLastNames')}</span></div>
-                        <div className="col-lg-9 col-5">{uniqueLastNames}</div>
-                    </div>
-                </div>}
-            <ol className="list-group list-group-flush">
-              {searchResults && searchResults.map((item) => (
-                <li className='list-group-item cursor-pointer' key={item.id} onClick={() => navigate(`/family/${item.family_uuid}`)}>
-                  <span className='fw-bold'>{item.full_name}</span>
-                  &nbsp;({item.birth_year} {t('home.rn')}), {t('home.settlement')} - {item.settlement}
-                </li>
-              ))}
-              {searchResults && searchResults.length === 0 &&
-                  <li className='list-group-item'>{t('home.noResults')}</li>}
-            </ol>
-          </div>
+          <SearchResults
+            loading={loading}
+            searchResults={searchResults || []}
+            searchResultsCount={searchResultsCount}
+            uniqueAreaEvictions={uniqueAreaEvictions}
+            uniqueLastNames={uniqueLastNames}></SearchResults>
         </div>
       </div>
     } sidebar={<SidebarTemplate content={
