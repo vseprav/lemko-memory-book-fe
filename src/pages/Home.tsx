@@ -53,6 +53,7 @@ const Home = () => {
       setUniqueAreaEvictions('');
       setUniqueLastNames('');
     }
+    // eslint-disable-next-line
   }, [searchQuery]);
 
   return (
