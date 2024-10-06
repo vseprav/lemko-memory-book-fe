@@ -2,14 +2,19 @@ import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
 
 const About = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   return (
-      <PageTemplate content={<h1>{t('navbar.about')}</h1>} sidebar={
-        <>
-          <h5>{t('sidebar.title')}</h5>
-          <p>{t('sidebar.text')}</p>
-        </>
-      } />
+    <PageTemplate content={
+      <div className='col-12'>
+        <h1>{t('about.title')}</h1>
+        <div className="row g-3 align-items-center">
+          <p>{t('about.text1')}</p>
+          <p>{t('about.text2')}</p>
+          <p>{t('about.text3')}</p>
+        </div>
+      </div>
+    } sidebar={<></>
+    }/>
   );
 }
 export default About;
