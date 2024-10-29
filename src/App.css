@@ -28,3 +28,12 @@
   align-items: center;
   height: 100vh;
 }
+.donate-btn {
+  width: 100%;
+  padding: 10px!important;
+}
+.donate-text {
+  text-align: center;
+  padding: 10px;
+  margin: 0!important;
+}

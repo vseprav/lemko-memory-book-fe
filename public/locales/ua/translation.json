@@ -32,5 +32,11 @@
   },
   "footer": {
     "text": "Молода Лемківщина. Всі права захищені."
+  },
+  "donate": {
+    "monoBtn": "Банка Mono",
+    "monoText": "Донат на банку monobank",
+    "facebookBtn": "Facebook",
+    "facebookText": "Підтримати на Facebook"
   }
 }
