@@ -7,7 +7,6 @@ interface SidebarTemplateProps {
 }
 
 const SidebarTemplate: FC<SidebarTemplateProps> = ({ content }) => {
-  const {t} = useTranslation();
   return (
     <>
       <div className='row'>
