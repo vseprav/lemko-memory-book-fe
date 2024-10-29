@@ -1,5 +1,4 @@
 import {FC, ReactElement} from "react";
-import {useTranslation} from "react-i18next";
 import Donate from "../components/Donate";
 
 interface SidebarTemplateProps {
