@@ -2,11 +2,13 @@ import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
 import SidebarTemplate from "../templates/SidebarTemplate";
 import {SetStateAction, useEffect, useState} from "react";
-import searchApi, {findUniqueSettlementsAndEvictions, PersonItem} from "../api/search";
+import searchApi, {PersonItem} from "../api/search";
 import {useNavigate} from "react-router-dom";
 import {useQuery} from "../hooks/useQuery";
 import SearchResults from "../templates/SearchResults";
+import Pagination from "react-bootstrap/Pagination";
 
+const PAGE_SIZE = 20;
 
 const Home = () => {
   const {t} = useTranslation();
@@ -21,6 +23,7 @@ const Home = () => {
   const [uniqueAreaEvictions, setUniqueAreaEvictions] = useState<string>('');
   const [uniqueLastNames, setUniqueLastNames] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
 
   const setQueryParam = (key: string, value: string) => {
     const searchParams = new URLSearchParams(query.toString());
@@ -33,15 +36,49 @@ const Home = () => {
     setQueryParam(queryName, event.target.value as string);
   };
 
-  const handleSearch = async () => {
+  const fetchPage = async (pageNum: number) => {
     setLoading(true);
-    const res = await searchApi(searchQuery);
+    const res = await searchApi(searchQuery, PAGE_SIZE, (pageNum - 1) * PAGE_SIZE);
     setLoading(false);
-    const uniqueValues = findUniqueSettlementsAndEvictions(res);
-    setSearchResults(res);
-    setSearchResultsCount(res.length);
-    setUniqueAreaEvictions(uniqueValues.areaEvictions.join(', '));
-    setUniqueLastNames(uniqueValues.lastNames.join(', '));
+    setSearchResults(res.items);
+    setSearchResultsCount(res.total);
+    setUniqueAreaEvictions(res.area_evictions.join(', '));
+    setUniqueLastNames(res.last_names.join(', '));
+    setPage(pageNum);
+  };
+
+  const handleSearch = () => fetchPage(1);
+
+  const pageCount = Math.ceil(searchResultsCount / PAGE_SIZE);
+
+  const pageItems = () => {
+    const items = [];
+    const from = Math.max(1, page - 2);
+    const to = Math.min(pageCount, page + 2);
+    if (from > 1) {
+      items.push(<Pagination.Item key={1} onClick={() => fetchPage(1)}>1</Pagination.Item>);
+      if (from > 2) {
+        items.push(<Pagination.Ellipsis key="start-ellipsis" disabled/>);
+      }
+    }
+    for (let i = from; i <= to; i++) {
+      items.push(
+        <Pagination.Item key={i} active={i === page} onClick={() => fetchPage(i)}>
+          {i}
+        </Pagination.Item>
+      );
+    }
+    if (to < pageCount) {
+      if (to < pageCount - 1) {
+        items.push(<Pagination.Ellipsis key="end-ellipsis" disabled/>);
+      }
+      items.push(
+        <Pagination.Item key={pageCount} onClick={() => fetchPage(pageCount)}>
+          {pageCount}
+        </Pagination.Item>
+      );
+    }
+    return items;
   };
 
   useEffect(() => {
@@ -52,6 +89,7 @@ const Home = () => {
       setSearchResultsCount(0);
       setUniqueAreaEvictions('');
       setUniqueLastNames('');
+      setPage(1);
     }
     // eslint-disable-next-line
   }, [searchQuery]);
@@ -91,6 +129,16 @@ const Home = () => {
             uniqueAreaEvictions={uniqueAreaEvictions}
             uniqueLastNames={uniqueLastNames}></SearchResults>
         </div>
+        {!loading && pageCount > 1 &&
+            <div className="row mt-3">
+                <div className="col-12 d-flex justify-content-center">
+                    <Pagination>
+                        <Pagination.Prev disabled={page === 1} onClick={() => fetchPage(page - 1)}/>
+                      {pageItems()}
+                        <Pagination.Next disabled={page === pageCount} onClick={() => fetchPage(page + 1)}/>
+                    </Pagination>
+                </div>
+            </div>}
       </div>
     } sidebar={<SidebarTemplate content={
       <>

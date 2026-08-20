@@ -1,6 +1,5 @@
 import React, { FC, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
 import AppPaths from "../config/AppPaths";
 import colors from "../theme/colors";
