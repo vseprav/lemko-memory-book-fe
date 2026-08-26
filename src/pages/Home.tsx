@@ -1,7 +1,7 @@
 import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
 import SidebarTemplate from "../templates/SidebarTemplate";
-import {SetStateAction, useEffect, useState} from "react";
+import {SetStateAction, useEffect, useRef, useState} from "react";
 import searchApi, {PersonItem} from "../api/search";
 import {useNavigate} from "react-router-dom";
 import {useQuery} from "../hooks/useQuery";
@@ -9,6 +9,8 @@ import SearchResults from "../templates/SearchResults";
 import Pagination from "react-bootstrap/Pagination";
 
 const PAGE_SIZE = 20;
+const SEARCH_DEBOUNCE_MS = 300;
+const MIN_QUERY_LENGTH = 3;
 
 const Home = () => {
   const {t} = useTranslation();
@@ -24,6 +26,8 @@ const Home = () => {
   const [uniqueLastNames, setUniqueLastNames] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
+  // Incremented per request so a slow, stale response can't overwrite a newer one
+  const requestId = useRef(0);
 
   const setQueryParam = (key: string, value: string) => {
     const searchParams = new URLSearchParams(query.toString());
@@ -37,8 +41,10 @@ const Home = () => {
   };
 
   const fetchPage = async (pageNum: number) => {
+    const id = ++requestId.current;
     setLoading(true);
     const res = await searchApi(searchQuery, PAGE_SIZE, (pageNum - 1) * PAGE_SIZE);
+    if (id !== requestId.current) return;
     setLoading(false);
     setSearchResults(res.items);
     setSearchResultsCount(res.total);
@@ -82,15 +88,19 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (search) {
-      handleSearch();
-    } else {
+    if (!search || searchQuery.trim().length < MIN_QUERY_LENGTH) {
+      requestId.current++; // drop any in-flight response
+      setLoading(false);
       setSearchResults([]);
       setSearchResultsCount(0);
       setUniqueAreaEvictions('');
       setUniqueLastNames('');
       setPage(1);
+      return;
     }
+    // Debounce: wait until the user pauses typing before hitting the API
+    const timer = setTimeout(handleSearch, SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
     // eslint-disable-next-line
   }, [searchQuery]);
 
