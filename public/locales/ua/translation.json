@@ -13,7 +13,15 @@
     "found": "Всього знайдено:",
     "people": "людей",
     "areaEviction": "Область виселення:",
-    "foundLastNames": "Знайдені прізвища:"
+    "foundLastNames": "Знайдені прізвища:",
+    "foundSettlements": "Населені пункти:",
+    "settlementFilter": "Населений пункт",
+    "settlementPlaceholder": "Усі населені пункти — почніть вводити назву",
+    "noSettlements": "Нічого не знайдено",
+    "areaFilter": "Область виселення",
+    "allAreas": "Усі області",
+    "filters": "Фільтри:",
+    "clearFilter": "Зняти фільтр"
   },
   "family": {
     "familyName": "Родина",
