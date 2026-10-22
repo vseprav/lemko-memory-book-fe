@@ -5,18 +5,22 @@ import {useParams} from "react-router-dom";
 import {getFamilyById} from "../api/getFamilyById";
 import {useEffect, useState} from "react";
 import {PersonItem} from "../api/search";
+import {FamilySettlement, getFamilySettlement} from "../api/getFamilySettlement";
 import LoadingSpinner from "../templates/LoadingSpinner";
+import SettlementCard from "../templates/SettlementCard";
 
 const Family = () => {
   const {t} = useTranslation();
   const {id} = useParams();
   const [family, setFamily] = useState<PersonItem[]>([]);
+  const [settlement, setSettlement] = useState<FamilySettlement | null>(null);
 
   useEffect(() => {
     if (!id) return;
     getFamilyById(id).then(res => {
       setFamily(res);
     })
+    getFamilySettlement(id).then(setSettlement);
   }, [id]);
 
   return (
@@ -37,6 +41,7 @@ const Family = () => {
                 </li>
               ))}
             </ol>
+            {settlement && <div className="mt-4"><SettlementCard info={settlement}/></div>}
           </>
         )}
       </div>
