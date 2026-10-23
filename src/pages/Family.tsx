@@ -5,7 +5,7 @@ import {useParams} from "react-router-dom";
 import {getFamilyById} from "../api/getFamilyById";
 import {useEffect, useState} from "react";
 import {PersonItem} from "../api/search";
-import {FamilySettlement, getFamilySettlement} from "../api/getFamilySettlement";
+import {FamilyInfo, FamilySettlement, getFamilySettlement} from "../api/getFamilySettlement";
 import LoadingSpinner from "../templates/LoadingSpinner";
 import SettlementCard from "../templates/SettlementCard";
 
@@ -23,6 +23,22 @@ const Family = () => {
     getFamilySettlement(id).then(setSettlement);
   }, [id]);
 
+  // "Родина №12" as printed; entries the book does not number are records, not numbered families
+  const title = (info?: FamilyInfo) => {
+    if (info?.kind === 'numbered' && info.printed_no) return t('family.numbered', {no: info.printed_no});
+    if (info?.kind && info.kind !== 'numbered') return t('family.unnumbered');
+    return t('family.familyName');
+  };
+
+  // The printed cells that are not blank, in the order of the book's columns
+  const describe = (item: PersonItem) => [
+    item.family_role,
+    item.birth_year && `${item.birth_year} ${t('home.rn')}`,
+    item.area_eviction && `${t('family.areaEviction')}: ${item.area_eviction}`,
+  ].filter(Boolean).join(', ');
+
+  const hasChs = family.some(item => item.family_role === 'ч/с');
+
   return (
     <PageTemplate content={
       <div className='col-12'>
@@ -31,16 +47,25 @@ const Family = () => {
         )}
         {family.length > 0 && (
           <>
-            <h1>{t('family.familyName')}</h1>
-            <p>{t('family.settlement')}: <span className='fw-bold'>{family[0].settlement}</span></p>
-            <ol className="list-group list-group-numbered">
-              {family.map((item) => (
+            <h1>{title(settlement?.family)}</h1>
+            <p className="mb-1">{t('family.settlement')}: <span className='fw-bold'>{family[0].settlement}</span></p>
+            {settlement?.family?.section &&
+                <p className="mb-1">{t('family.section')}: <span className='fw-bold'>{settlement.family.section}</span></p>}
+            <ol className="list-group list-group-numbered mt-3">
+              {family.map((item) => item.row_kind === 'note' ? (
+                <li key={item.id} className="list-group-item fst-italic">
+                  {item.full_name}
+                  {item.persons_represented &&
+                      <span className="text-muted"> ({t('family.noteRow', {count: item.persons_represented})})</span>}
+                </li>
+              ) : (
                 <li key={item.id} className="list-group-item">
-                  <span className='fw-bold'>{item.full_name}</span>, {item.family_role},
-                  ({item.birth_year} {t('home.rn')}), {t('family.areaEviction')}: {item.area_eviction}
+                  <span className='fw-bold'>{item.full_name}</span>
+                  {describe(item) && <span>, {describe(item)}</span>}
                 </li>
               ))}
             </ol>
+            {hasChs && <p className="text-muted small mt-2">{t('family.chsLegend')}</p>}
             {settlement && <div className="mt-4"><SettlementCard info={settlement}/></div>}
           </>
         )}

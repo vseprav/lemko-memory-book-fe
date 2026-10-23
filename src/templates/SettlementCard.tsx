@@ -15,6 +15,10 @@ const SettlementCard: FC<SettlementCardProps> = ({info}) => {
     list.powiat && `${t('settlementInfo.powiat')} ${list.powiat}`,
     list.gmina && `${t('settlementInfo.gmina')} ${list.gmina}`,
   ].filter(Boolean).join(', ');
+  // The book prints two counts for a list: in the summary table and in the list's own total row.
+  // Both are shown as printed when they differ (e.g. Дошниця – Тиханя: 711 and 611 persons).
+  const totalRowDiffers = list.list_total_persons !== null && list.list_total_families != null && (
+    list.list_total_persons !== list.persons_count || list.list_total_families !== String(list.families_count));
 
   const renderSettlement = (s: Settlement) => (
     <div key={s.id} className="mb-2">
@@ -39,9 +43,13 @@ const SettlementCard: FC<SettlementCardProps> = ({info}) => {
         <h5 className="card-title">{info.heading}</h5>
         {list.kind === 'combined' && <p className="text-muted mb-2">{t('settlementInfo.combined')}</p>}
         <p className="mb-1">
-          {t('settlementInfo.book', {volume: list.volume, table: list.table_no})}
+          {list.book_page
+            ? t('settlementInfo.bookPage', {volume: list.volume, page: list.book_page})
+            : t('settlementInfo.book', {volume: list.volume, table: list.table_no})}
           {list.families_count !== null && list.persons_count !== null &&
               <span>; {t('settlementInfo.counts', {families: list.families_count, persons: list.persons_count})}</span>}
+          {totalRowDiffers && <span> ({t('settlementInfo.totalRow', {
+            families: list.list_total_families, persons: list.list_total_persons})})</span>}
         </p>
         {list.archive_ref && <p className="mb-1">
           {t('settlementInfo.archive')}: {list.archive_ref}

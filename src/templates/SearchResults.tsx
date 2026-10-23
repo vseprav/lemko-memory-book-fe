@@ -87,7 +87,7 @@ const SearchResults: FC<SearchResultsProps> = ({
           <li className='list-group-item cursor-pointer' key={item.id}
               onClick={() => navigate(`/family/${item.family_uuid}`)}>
             <span className='fw-bold'>{item.full_name}</span>
-            &nbsp;({item.birth_year} {t('home.rn')}), {t('home.settlement')} - {item.settlement}
+            {item.birth_year && <>&nbsp;({item.birth_year} {t('home.rn')})</>}, {t('home.settlement')} - {item.settlement}
           </li>
         ))}
         {searchResults && searchResults.length === 0 &&

@@ -2,12 +2,18 @@ export interface PersonItem {
   id: string;
   family_uuid: string;
   full_name: string;
-  family_role: string;
-  birth_year: string;
-  area_eviction: string;
+  // As printed; null where the book's cell is blank
+  family_role: string | null;
+  birth_year: string | null;
+  area_eviction: string | null;
   settlement: string;
   // Register entry behind the place, when the book points at exactly one; null for combined lists
   settlement_id: number | null;
+  // Book order inside the family, from 1
+  family_position?: number | null;
+  // 'note' for a row the book prints instead of names ("Родина №7 - заклеєно стор. - 4 особи.")
+  row_kind?: 'person' | 'note';
+  persons_represented?: number | null;
 }
 
 export interface SettlementFacet {

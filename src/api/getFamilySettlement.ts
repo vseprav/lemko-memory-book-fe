@@ -29,16 +29,33 @@ export interface SettlementList {
   powiat: string | null;
   gmina: string | null;
   section: string | null;
+  // The summary table (Розділ ІІ) of the book
   families_count: number | null;
   persons_count: number | null;
+  // The list's own "Всього з …" row; families as printed ("96", "170-33", "-")
   list_total_persons: number | null;
+  list_total_families?: string | null;
+  // Start page of the list as printed in the table of contents ("31", "707 (718)")
+  book_page?: string | null;
   archive_ref: string | null;
   archive_pages: string | null;
   settlement_ids: number[];
 }
 
+// The family as printed in its list
+export interface FamilyInfo {
+  family_uuid: string;
+  // The family number as printed ("12", "138-1", "4?"); null for entries the book does not number
+  printed_no: string | null;
+  kind: 'numbered' | 'individual' | 'unnumbered_household' | 'unnumbered_group' | null;
+  book_seq: number | null;
+  // The printed sub-heading the family stands under ("Новиця, присілок Прислоп")
+  section: string | null;
+}
+
 export interface FamilySettlement {
   heading: string;
+  family?: FamilyInfo;
   list: SettlementList;
   settlement: Settlement | null;
   list_settlements: Settlement[];
