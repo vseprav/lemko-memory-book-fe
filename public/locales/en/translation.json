@@ -1,0 +1,77 @@
+{
+  "meta": {
+    "title": "Book of Memory of the Lemko Region"
+  },
+  "navbar": {
+    "home": "Moloda Lemkivshchyna",
+    "about": "About the project",
+    "language": "Language"
+  },
+  "home": {
+    "searchText": "Enter a surname (in Ukrainian, as printed in the book)",
+    "searchButton": "Search",
+    "searchPlaceholder": "For example Кухар, Крупей, Радь",
+    "noResults": "Nothing was found for your search",
+    "rn": "born",
+    "settlement": "place of residence",
+    "found": "Total found:",
+    "people": "people",
+    "areaEviction": "Region of resettlement:",
+    "foundLastNames": "Surnames found:",
+    "foundSettlements": "Settlements:",
+    "settlementFilter": "Settlement",
+    "settlementPlaceholder": "All settlements — start typing a name",
+    "noSettlements": "Nothing found",
+    "areaFilter": "Region of resettlement",
+    "allAreas": "All regions",
+    "now": "now",
+    "filters": "Filters:",
+    "clearFilter": "Clear filter"
+  },
+  "family": {
+    "familyName": "Family",
+    "settlement": "Place of residence",
+    "section": "In the list under the heading",
+    "areaEviction": "region of resettlement",
+    "noteRow": "printed in the book instead of names; persons: {{count}}",
+    "chsLegend": "ч/с — family member (член сім’ї), as marked in the book."
+  },
+  "settlementInfo": {
+    "book": "Book of Memory of the Lemko Region 1944–1946, vol. {{volume}}, list {{table}}",
+    "bookPage": "Book of Memory of the Lemko Region 1944–1946, vol. {{volume}}, p. {{page}}",
+    "counts": "the list has {{families}} families, {{persons}} persons",
+    "totalRow": "in the list's own total: {{families}} families, {{persons}} persons",
+    "archive": "Archival source",
+    "pages": "pp.",
+    "division": "Administrative division 1944–1946",
+    "powiat": "powiat",
+    "gmina": "gmina",
+    "code": "code in the book",
+    "combined": "A joint list for several settlements",
+    "register": "In the Register of Settlements of the Lemko Region",
+    "powiat1939": "powiat (1939 division)",
+    "hamlets": "hamlets",
+    "borderland": "a village on the edge of the Lemko Region or outside it (marked * in the book)",
+    "volumes": "lists of evicted persons in volumes",
+    "printed": "as printed"
+  },
+  "sidebar": {
+    "title": "BOOK OF MEMORY OF THE LEMKO REGION 1944–1946",
+    "text": "The “Book of Memory of the Lemko Region 1944–1946” contains the lists of Ukrainian Lemkos forcibly evicted in 1944–1946 by the communist regimes of Poland and the USSR. Based on archival documents, the book preserves the memory of the Lemko tragedy and serves as a reference for the descendants of the deportees. Author: Yaroslava Halyk."
+  },
+  "about": {
+    "title": "About the project",
+    "text1": "The “Book of Memory of the Lemko Region 1944–1946” is a martyrology of the Ukrainian Lemkos who fell victim to the criminal resettlement campaign carried out by the communist regimes of Poland and the USSR in 1944–1946. As a result, hundreds of thousands of Lemkos were forcibly evicted from their ancestral ethnic lands, then under Polish rule, to the Ukrainian SSR. The lists of deported families and persons are arranged by the settlements of the Lemko Region and based on archival documents.",
+    "text2": "This book is documentary evidence of the Lemko tragedy of the mid-20th century and a warning against similar crimes. It is an important reference for deported Lemkos and their descendants, helping them find their families. It will also be a useful resource for local historians, researchers, scholars and historians.",
+    "text3": "Idea, project lead and compiler: Yaroslava Halyk. Photocopies of archival documents: Yaroslava Halyk, Oleh Radziievskyi (in vol. 1 also Ivan Chelak). Technical editing: Andrii Khomyn. Technical support: Denys Halyk. Typesetting: Yaroslava Halyk, Andrii Khomyn (in vol. 1 also Valeriia Halyk, Oleksii Halyk, Andrii Shafran, Fr. Taras Hrem). The book was published with the financial support of the Lemko Research Foundation in the USA."
+  },
+  "footer": {
+    "text": "Moloda Lemkivshchyna. All rights reserved."
+  },
+  "donate": {
+    "monoBtn": "Mono jar",
+    "monoText": "Donate to the monobank jar",
+    "facebookBtn": "Facebook",
+    "facebookText": "Support us on Facebook"
+  }
+}

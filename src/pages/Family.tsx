@@ -5,7 +5,7 @@ import {useParams} from "react-router-dom";
 import {getFamilyById} from "../api/getFamilyById";
 import {useEffect, useState} from "react";
 import {PersonItem} from "../api/search";
-import {FamilyInfo, FamilySettlement, getFamilySettlement} from "../api/getFamilySettlement";
+import {FamilySettlement, getFamilySettlement} from "../api/getFamilySettlement";
 import LoadingSpinner from "../templates/LoadingSpinner";
 import SettlementCard from "../templates/SettlementCard";
 
@@ -22,13 +22,6 @@ const Family = () => {
     })
     getFamilySettlement(id).then(setSettlement);
   }, [id]);
-
-  // "Родина №12" as printed; entries the book does not number are records, not numbered families
-  const title = (info?: FamilyInfo) => {
-    if (info?.kind === 'numbered' && info.printed_no) return t('family.numbered', {no: info.printed_no});
-    if (info?.kind && info.kind !== 'numbered') return t('family.unnumbered');
-    return t('family.familyName');
-  };
 
   // The printed cells that are not blank, in the order of the book's columns
   const describe = (item: PersonItem) => [
@@ -47,7 +40,7 @@ const Family = () => {
         )}
         {family.length > 0 && (
           <>
-            <h1>{title(settlement?.family)}</h1>
+            <h1>{t('family.familyName')}</h1>
             <p className="mb-1">{t('family.settlement')}: <span className='fw-bold'>{family[0].settlement}</span></p>
             {settlement?.family?.section &&
                 <p className="mb-1">{t('family.section')}: <span className='fw-bold'>{settlement.family.section}</span></p>}

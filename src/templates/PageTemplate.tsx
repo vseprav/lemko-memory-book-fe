@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from "react-router-dom";
 import AppPaths from "../config/AppPaths";
 import colors from "../theme/colors";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 
 
 interface PageTemplateProps {
@@ -27,7 +28,10 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
                                     alt="logo"
                                 />
                             </Link>
-                            <ul className="nav justify-content-end" style={{width: '100%'}}>
+                            <ul className="nav justify-content-end align-items-center gap-2" style={{width: '100%'}}>
+                              <li className="nav-item">
+                                    <LanguageSwitcher/>
+                                </li>
                               <li className="nav-item">
                                     <button type="button" className="btn btn-outline-dark" onClick={() => navigate(AppPaths.about)}>
                                         {t('navbar.about')}
