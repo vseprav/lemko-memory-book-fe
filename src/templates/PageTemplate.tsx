@@ -33,6 +33,11 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
                                     <LanguageSwitcher/>
                                 </li>
                               <li className="nav-item">
+                                    <button type="button" className="btn btn-outline-dark" onClick={() => navigate(AppPaths.howToRead)}>
+                                        {t('navbar.howToRead')}
+                                    </button>
+                                </li>
+                              <li className="nav-item">
                                     <button type="button" className="btn btn-outline-dark" onClick={() => navigate(AppPaths.about)}>
                                         {t('navbar.about')}
                                     </button>

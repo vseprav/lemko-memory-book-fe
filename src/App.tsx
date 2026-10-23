@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import AppPaths from "./config/AppPaths";
 import About from "./pages/About";
 import Family from "./pages/Family";
+import HowToRead from "./pages/HowToRead";
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
             <Routes>
                 <Route path={AppPaths.home} element={<Home/>}/>
                 <Route path={AppPaths.about} element={<About/>}/>
+                <Route path={AppPaths.howToRead} element={<HowToRead/>}/>
                 <Route path={AppPaths.family} element={<Family/>}/>
             </Routes>
         </BrowserRouter>

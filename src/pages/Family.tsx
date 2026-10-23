@@ -1,7 +1,8 @@
 import SidebarTemplate from "../templates/SidebarTemplate";
 import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import AppPaths from "../config/AppPaths";
 import {getFamilyById} from "../api/getFamilyById";
 import {useEffect, useState} from "react";
 import {PersonItem} from "../api/search";
@@ -58,7 +59,10 @@ const Family = () => {
                 </li>
               ))}
             </ol>
-            {hasChs && <p className="text-muted small mt-2">{t('family.chsLegend')}</p>}
+            <p className="text-muted small mt-2">
+              {hasChs && <>{t('family.chsLegend')} </>}
+              <Link to={AppPaths.howToRead}>{t('navbar.howToRead')}</Link>
+            </p>
             {settlement && <div className="mt-4"><SettlementCard info={settlement}/></div>}
           </>
         )}

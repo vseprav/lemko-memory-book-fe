@@ -5,7 +5,47 @@
   "navbar": {
     "home": "Moloda Lemkivshchyna",
     "about": "About the project",
+    "howToRead": "How to read the lists",
     "language": "Language"
+  },
+  "howToRead": {
+    "title": "How to read the lists",
+    "intro": "The lists on this site follow the “Book of Memory of the Lemko Region 1944–1946”: every record is shown as printed in the book, in Ukrainian. Below, the marks and features of the records are explained, following the author's preface to the book.",
+    "items": {
+      "chs": {
+        "term": "ч/с",
+        "text": "In the relationship column it means член сім’ї, “family member”. The book uses it for people recorded on their own, without a family number."
+      },
+      "question": {
+        "term": "A question mark, or another reading in brackets",
+        "text": "The archival record was hard to read, for example the year of birth 1932(30) or the name Теодор (Федір). The site's search finds a record by each of the readings."
+      },
+      "surnames": {
+        "term": "Spelling of surnames and given names",
+        "text": "Surnames are given as the clerks of the archival lists wrote them, so one surname may appear in several spellings. Some given names are printed in their modern form, for example Маря — Марія, Осиф — Йосиф."
+      },
+      "years": {
+        "term": "Years of birth",
+        "text": "Years of birth in the archival documents may be wrong. The book gives them as recorded."
+      },
+      "areas": {
+        "term": "Region of resettlement",
+        "text": "Regions are named as they were then: Ворошиловградська is now Луганська, Сталінська is now Донецька, Станіславська is now Івано-Франківська. Дрогобицька oblast was later abolished: part of it went to Львівська oblast, part to Poland."
+      },
+      "numbering": {
+        "term": "Numbering",
+        "text": "The numbering of families and persons in the book differs from the archive's: families that did not leave, or were recorded twice, are left out of the book."
+      },
+      "missing": {
+        "term": "Incomplete families",
+        "text": "Some family members were never registered in the archival lists, so a family in the book may be incomplete."
+      },
+      "notes": {
+        "term": "Notes instead of names",
+        "text": "Where a page of the archival document is damaged, the book prints a note instead of names, for example «Родина №7 - заклеєно стор. - 4 особи.» (“Family no. 7 — page pasted over — 4 persons”). The site shows such notes in italics among the family members."
+      }
+    },
+    "source": "Source: Yaroslava Halyk, “Book of Memory of the Lemko Region 1944–1946”, vol. 3, preface."
   },
   "home": {
     "searchText": "Enter a surname (in Ukrainian, as printed in the book)",
