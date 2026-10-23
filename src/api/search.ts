@@ -17,8 +17,10 @@ export interface SettlementFacet {
   count: number;
 }
 
-export interface AreaFacet {
-  value: string;
+export interface OblastFacet {
+  id: number;
+  name: string;
+  modern_name: string | null;
   count: number;
 }
 
@@ -27,7 +29,7 @@ export interface AreaFacet {
 export interface SearchResponse {
   total: number;
   last_names: string[];
-  area_evictions: AreaFacet[];
+  oblasts: OblastFacet[];
   settlements: SettlementFacet[];
   items: PersonItem[];
 }
@@ -35,18 +37,17 @@ export interface SearchResponse {
 export interface SearchParams {
   query: string;
   settlement: number | null;
-  // The area of eviction exactly as printed in the book
-  area: string;
+  oblast: number | null;
 }
 
 export const MIN_QUERY_LENGTH = 3;
 
-export const isSearchable = ({query, settlement, area}: SearchParams) =>
-  query.trim().length >= MIN_QUERY_LENGTH || settlement !== null || area !== '';
+export const isSearchable = ({query, settlement, oblast}: SearchParams) =>
+  query.trim().length >= MIN_QUERY_LENGTH || settlement !== null || oblast !== null;
 
 const LEGACY_LIMIT = 300;
 
-const buildUrl = ({query, settlement, area}: SearchParams, limit: number, offset: number) => {
+const buildUrl = ({query, settlement, oblast}: SearchParams, limit: number, offset: number) => {
   const params = new URLSearchParams({
     query,
     limit: String(limit),
@@ -55,8 +56,8 @@ const buildUrl = ({query, settlement, area}: SearchParams, limit: number, offset
   if (settlement !== null) {
     params.set('settlement', String(settlement));
   }
-  if (area) {
-    params.set('area', area);
+  if (oblast !== null) {
+    params.set('oblast', String(oblast));
   }
   return `${process.env.REACT_APP_API_URL}/search/evicted_persons?${params.toString()}`;
 };
@@ -68,18 +69,12 @@ const legacySearch = async (params: SearchParams, limit: number, offset: number)
   const all = await res.json() as PersonItem[];
 
   const lastNames = new Set<string>();
-  const areaCounts = new Map<string, number>();
-  all.forEach(item => {
-    lastNames.add(item.full_name.split(' ')[0].trim());
-    if (item.area_eviction) {
-      areaCounts.set(item.area_eviction, (areaCounts.get(item.area_eviction) || 0) + 1);
-    }
-  });
+  all.forEach(item => lastNames.add(item.full_name.split(' ')[0].trim()));
 
   return {
     total: all.length,
     last_names: Array.from(lastNames),
-    area_evictions: Array.from(areaCounts, ([value, count]) => ({value, count})),
+    oblasts: [],
     settlements: [],
     items: all.slice(offset, offset + limit),
   };
@@ -91,7 +86,7 @@ const searchApi = async (params: SearchParams, limit: number, offset: number): P
   if (Array.isArray(data)) {
     return legacySearch(params, limit, offset);
   }
-  return {settlements: [], ...data} as SearchResponse;
+  return {oblasts: [], settlements: [], ...data} as SearchResponse;
 };
 
 export default searchApi;

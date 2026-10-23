@@ -2,8 +2,8 @@ import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
 import SidebarTemplate from "../templates/SidebarTemplate";
 import {SetStateAction, useEffect, useMemo, useRef, useState} from "react";
-import searchApi, {AreaFacet, isSearchable, PersonItem, SearchParams, SettlementFacet} from "../api/search";
-import {AreaOption, getAreaEvictions, getSettlements, SettlementOption, settlementLabel} from "../api/getFilters";
+import searchApi, {isSearchable, OblastFacet, PersonItem, SearchParams, SettlementFacet} from "../api/search";
+import {getOblasts, getSettlements, OblastOption, oblastLabel, SettlementOption, settlementLabel} from "../api/getFilters";
 import {useNavigate} from "react-router-dom";
 import {useQuery} from "../hooks/useQuery";
 import SearchResults from "../templates/SearchResults";
@@ -16,7 +16,7 @@ const SEARCH_DEBOUNCE_MS = 300;
 // URL parameters, so a filtered view can be shared and the back button works
 const QUERY_PARAM = 'search';
 const SETTLEMENT_PARAM = 'settlement';
-const AREA_PARAM = 'area';
+const OBLAST_PARAM = 'oblast';
 
 const Home = () => {
   const {t} = useTranslation();
@@ -24,23 +24,24 @@ const Home = () => {
   const query = useQuery();
   const search = query.get(QUERY_PARAM) || '';
   const settlement = Number(query.get(SETTLEMENT_PARAM)) || null;
-  const area = query.get(AREA_PARAM) || '';
+  const oblast = Number(query.get(OBLAST_PARAM)) || null;
 
   const [searchQuery, setSearchQuery] = useState(search);
   const [searchResults, setSearchResults] = useState<PersonItem[] | null>(null);
   const [searchResultsCount, setSearchResultsCount] = useState<number>(0);
-  const [areaEvictions, setAreaEvictions] = useState<AreaFacet[]>([]);
+  const [oblastFacets, setOblastFacets] = useState<OblastFacet[]>([]);
   const [settlementFacets, setSettlementFacets] = useState<SettlementFacet[]>([]);
   const [uniqueLastNames, setUniqueLastNames] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [settlementOptions, setSettlementOptions] = useState<SettlementOption[]>([]);
-  const [areaOptions, setAreaOptions] = useState<AreaOption[]>([]);
+  const [oblastOptions, setOblastOptions] = useState<OblastOption[]>([]);
   // Incremented per request so a slow, stale response can't overwrite a newer one
   const requestId = useRef(0);
 
-  const params: SearchParams = {query: searchQuery, settlement, area};
+  const params: SearchParams = {query: searchQuery, settlement, oblast};
   const selectedSettlement = settlementOptions.find(o => o.id === settlement) || null;
+  const selectedOblast = oblastOptions.find(o => o.id === oblast) || null;
 
   // While a search is active the dropdowns offer only what the current result contains, with
   // counts for that result; otherwise the whole book. The facets have no alt_names / powiat,
@@ -51,7 +52,11 @@ const Home = () => {
     const byId = new Map(settlementOptions.map(o => [o.id, o]));
     return settlementFacets.map(f => ({alt_names: [], powiat_1939: null, ...byId.get(f.id), ...f}));
   }, [searching, settlementOptions, settlementFacets]);
-  const areaChoices: AreaOption[] = searching ? areaEvictions : areaOptions;
+  const oblastChoices = useMemo(() => {
+    if (!searching) return oblastOptions;
+    const byId = new Map(oblastOptions.map(o => [o.id, o]));
+    return oblastFacets.map(f => ({republic: '', ...byId.get(f.id), ...f}));
+  }, [searching, oblastOptions, oblastFacets]);
 
   const setQueryParam = (key: string, value: string) => {
     const searchParams = new URLSearchParams(query.toString());
@@ -69,7 +74,7 @@ const Home = () => {
   };
 
   const setSettlement = (id: number | null) => setQueryParam(SETTLEMENT_PARAM, id ? String(id) : '');
-  const setArea = (value: string) => setQueryParam(AREA_PARAM, value);
+  const setOblast = (id: number | null) => setQueryParam(OBLAST_PARAM, id ? String(id) : '');
 
   const fetchPage = async (pageNum: number) => {
     const id = ++requestId.current;
@@ -79,7 +84,7 @@ const Home = () => {
     setLoading(false);
     setSearchResults(res.items);
     setSearchResultsCount(res.total);
-    setAreaEvictions(res.area_evictions);
+    setOblastFacets(res.oblasts);
     setSettlementFacets(res.settlements);
     setUniqueLastNames(res.last_names.join(', '));
     setPage(pageNum);
@@ -121,7 +126,7 @@ const Home = () => {
 
   useEffect(() => {
     getSettlements().then(setSettlementOptions);
-    getAreaEvictions().then(setAreaOptions);
+    getOblasts().then(setOblastOptions);
   }, []);
 
   // Keep the text box in sync when the URL changes from outside (back button, a link)
@@ -135,7 +140,7 @@ const Home = () => {
       setLoading(false);
       setSearchResults([]);
       setSearchResultsCount(0);
-      setAreaEvictions([]);
+      setOblastFacets([]);
       setSettlementFacets([]);
       setUniqueLastNames('');
       setPage(1);
@@ -145,7 +150,7 @@ const Home = () => {
     const timer = setTimeout(handleSearch, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line
-  }, [searchQuery, settlement, area]);
+  }, [searchQuery, settlement, oblast]);
 
   return (
     <PageTemplate content={
@@ -181,26 +186,28 @@ const Home = () => {
           </div>
           <div className="col-md-6">
             <label className="form-label mb-1" htmlFor="areaSelect">{t('home.areaFilter')}</label>
-            <select id="areaSelect" className="form-select" value={area} onChange={e => setArea(e.target.value)}>
+            <select id="areaSelect" className="form-select" value={oblast ?? ''}
+                    onChange={e => setOblast(Number(e.target.value) || null)}>
               <option value="">{t('home.allAreas')}</option>
               {/* The current value stays selectable even when it is not in the list */}
-              {area && !areaChoices.some(o => o.value === area) && <option value={area}>{area}</option>}
-              {areaChoices.map(o => (
-                <option key={o.value} value={o.value}>{o.value} ({o.count})</option>
+              {selectedOblast && !oblastChoices.some(o => o.id === oblast) &&
+                  <option value={selectedOblast.id}>{oblastLabel(selectedOblast, t('home.now'))}</option>}
+              {oblastChoices.map(o => (
+                <option key={o.id} value={o.id}>{oblastLabel(o, t('home.now'))} ({o.count})</option>
               ))}
             </select>
           </div>
         </div>
-        {(selectedSettlement || area) &&
+        {(selectedSettlement || selectedOblast) &&
             <div className="mt-3 d-flex flex-wrap gap-2 align-items-center">
                 <span className="fw-bold">{t('home.filters')}</span>
               {selectedSettlement &&
                   <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => setSettlement(null)}>
                     {settlementLabel(selectedSettlement)} ×
                   </button>}
-              {area &&
-                  <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => setArea('')}>
-                    {area} ×
+              {selectedOblast &&
+                  <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => setOblast(null)}>
+                    {oblastLabel(selectedOblast, t('home.now'))} ×
                   </button>}
             </div>}
         <div className="row mt-4">
@@ -208,13 +215,13 @@ const Home = () => {
             loading={loading}
             searchResults={searchResults || []}
             searchResultsCount={searchResultsCount}
-            areaEvictions={areaEvictions}
+            oblasts={oblastFacets}
             settlements={settlementFacets}
             uniqueLastNames={uniqueLastNames}
             activeSettlement={settlement}
-            activeArea={area}
+            activeOblast={oblast}
             onSelectSettlement={setSettlement}
-            onSelectArea={setArea}></SearchResults>
+            onSelectOblast={setOblast}></SearchResults>
         </div>
         {!loading && pageCount > 1 &&
             <div className="row mt-3">

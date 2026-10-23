@@ -1,33 +1,34 @@
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {FC, Fragment} from "react";
-import {AreaFacet, PersonItem, SettlementFacet} from "../api/search";
+import {OblastFacet, PersonItem, SettlementFacet} from "../api/search";
+import {oblastLabel} from "../api/getFilters";
 import LoadingSpinner from "./LoadingSpinner";
 
 interface SearchResultsProps {
   loading: boolean;
   searchResults: PersonItem[];
   searchResultsCount: number;
-  areaEvictions: AreaFacet[];
+  oblasts: OblastFacet[];
   settlements: SettlementFacet[];
   uniqueLastNames: string;
   activeSettlement: number | null;
-  activeArea: string;
+  activeOblast: number | null;
   onSelectSettlement: (id: number | null) => void;
-  onSelectArea: (value: string) => void;
+  onSelectOblast: (id: number | null) => void;
 }
 
 const SearchResults: FC<SearchResultsProps> = ({
                                                  loading,
                                                  searchResults,
                                                  searchResultsCount,
-                                                 areaEvictions,
+                                                 oblasts,
                                                  settlements,
                                                  uniqueLastNames,
                                                  activeSettlement,
-                                                 activeArea,
+                                                 activeOblast,
                                                  onSelectSettlement,
-                                                 onSelectArea,
+                                                 onSelectOblast,
                                                }) => {
 
   const {t} = useTranslation();
@@ -50,18 +51,19 @@ const SearchResults: FC<SearchResultsProps> = ({
                   <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.found')}</span></div>
                   <div className="col-lg-9 col-5">{searchResultsCount} {t('home.people')}</div>
               </div>
-              <div className="row">
-                  <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.areaEviction')}</span></div>
-                  <div className="col-lg-9 col-5">
-                    {areaEvictions.map(({value, count}, i) => (
-                      <Fragment key={value}>
-                        {i > 0 && ', '}
-                        {facetLink(`${value} (${count})`, value === activeArea,
-                          () => onSelectArea(value === activeArea ? '' : value))}
-                      </Fragment>
-                    ))}
-                  </div>
-              </div>
+              {oblasts.length > 0 &&
+                  <div className="row">
+                      <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.areaEviction')}</span></div>
+                      <div className="col-lg-9 col-5">
+                        {oblasts.map((o, i) => (
+                          <Fragment key={o.id}>
+                            {i > 0 && ', '}
+                            {facetLink(`${oblastLabel(o, t('home.now'))} (${o.count})`, o.id === activeOblast,
+                              () => onSelectOblast(o.id === activeOblast ? null : o.id))}
+                          </Fragment>
+                        ))}
+                      </div>
+                  </div>}
               {settlements.length > 0 &&
                   <div className="row">
                       <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.foundSettlements')}</span></div>
