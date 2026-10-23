@@ -1,8 +1,8 @@
 import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
 import SidebarTemplate from "../templates/SidebarTemplate";
-import {SetStateAction, useEffect, useRef, useState} from "react";
-import searchApi, {isSearchable, PersonItem, SearchParams, SettlementFacet} from "../api/search";
+import {SetStateAction, useEffect, useMemo, useRef, useState} from "react";
+import searchApi, {AreaFacet, isSearchable, PersonItem, SearchParams, SettlementFacet} from "../api/search";
 import {AreaOption, getAreaEvictions, getSettlements, SettlementOption, settlementLabel} from "../api/getFilters";
 import {useNavigate} from "react-router-dom";
 import {useQuery} from "../hooks/useQuery";
@@ -29,7 +29,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState(search);
   const [searchResults, setSearchResults] = useState<PersonItem[] | null>(null);
   const [searchResultsCount, setSearchResultsCount] = useState<number>(0);
-  const [areaEvictions, setAreaEvictions] = useState<string[]>([]);
+  const [areaEvictions, setAreaEvictions] = useState<AreaFacet[]>([]);
   const [settlementFacets, setSettlementFacets] = useState<SettlementFacet[]>([]);
   const [uniqueLastNames, setUniqueLastNames] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -41,6 +41,17 @@ const Home = () => {
 
   const params: SearchParams = {query: searchQuery, settlement, area};
   const selectedSettlement = settlementOptions.find(o => o.id === settlement) || null;
+
+  // While a search is active the dropdowns offer only what the current result contains, with
+  // counts for that result; otherwise the whole book. The facets have no alt_names / powiat,
+  // so those come from the full list (the type-ahead matches on them).
+  const searching = isSearchable(params) && !loading;
+  const settlementChoices = useMemo(() => {
+    if (!searching) return settlementOptions;
+    const byId = new Map(settlementOptions.map(o => [o.id, o]));
+    return settlementFacets.map(f => ({alt_names: [], powiat_1939: null, ...byId.get(f.id), ...f}));
+  }, [searching, settlementOptions, settlementFacets]);
+  const areaChoices: AreaOption[] = searching ? areaEvictions : areaOptions;
 
   const setQueryParam = (key: string, value: string) => {
     const searchParams = new URLSearchParams(query.toString());
@@ -166,15 +177,15 @@ const Home = () => {
         <div className="row g-3 mt-1">
           <div className="col-md-6">
             <label className="form-label mb-1">{t('home.settlementFilter')}</label>
-            <SettlementSelect options={settlementOptions} value={settlement} onChange={setSettlement}/>
+            <SettlementSelect options={settlementChoices} value={settlement} onChange={setSettlement}/>
           </div>
           <div className="col-md-6">
             <label className="form-label mb-1" htmlFor="areaSelect">{t('home.areaFilter')}</label>
             <select id="areaSelect" className="form-select" value={area} onChange={e => setArea(e.target.value)}>
               <option value="">{t('home.allAreas')}</option>
               {/* The current value stays selectable even when it is not in the list */}
-              {area && !areaOptions.some(o => o.value === area) && <option value={area}>{area}</option>}
-              {areaOptions.map(o => (
+              {area && !areaChoices.some(o => o.value === area) && <option value={area}>{area}</option>}
+              {areaChoices.map(o => (
                 <option key={o.value} value={o.value}>{o.value} ({o.count})</option>
               ))}
             </select>

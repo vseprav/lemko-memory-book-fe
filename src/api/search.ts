@@ -17,10 +17,17 @@ export interface SettlementFacet {
   count: number;
 }
 
+export interface AreaFacet {
+  value: string;
+  count: number;
+}
+
+// Facets describe the current result: each one is computed with the other filters applied but
+// not its own, so a dropdown keeps offering the alternatives with their counts
 export interface SearchResponse {
   total: number;
   last_names: string[];
-  area_evictions: string[];
+  area_evictions: AreaFacet[];
   settlements: SettlementFacet[];
   items: PersonItem[];
 }
@@ -61,18 +68,18 @@ const legacySearch = async (params: SearchParams, limit: number, offset: number)
   const all = await res.json() as PersonItem[];
 
   const lastNames = new Set<string>();
-  const areaEvictions = new Set<string>();
+  const areaCounts = new Map<string, number>();
   all.forEach(item => {
     lastNames.add(item.full_name.split(' ')[0].trim());
     if (item.area_eviction) {
-      areaEvictions.add(item.area_eviction);
+      areaCounts.set(item.area_eviction, (areaCounts.get(item.area_eviction) || 0) + 1);
     }
   });
 
   return {
     total: all.length,
     last_names: Array.from(lastNames),
-    area_evictions: Array.from(areaEvictions),
+    area_evictions: Array.from(areaCounts, ([value, count]) => ({value, count})),
     settlements: [],
     items: all.slice(offset, offset + limit),
   };

@@ -1,14 +1,14 @@
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {FC, Fragment} from "react";
-import {PersonItem, SettlementFacet} from "../api/search";
+import {AreaFacet, PersonItem, SettlementFacet} from "../api/search";
 import LoadingSpinner from "./LoadingSpinner";
 
 interface SearchResultsProps {
   loading: boolean;
   searchResults: PersonItem[];
   searchResultsCount: number;
-  areaEvictions: string[];
+  areaEvictions: AreaFacet[];
   settlements: SettlementFacet[];
   uniqueLastNames: string;
   activeSettlement: number | null;
@@ -53,10 +53,10 @@ const SearchResults: FC<SearchResultsProps> = ({
               <div className="row">
                   <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.areaEviction')}</span></div>
                   <div className="col-lg-9 col-5">
-                    {areaEvictions.map((value, i) => (
+                    {areaEvictions.map(({value, count}, i) => (
                       <Fragment key={value}>
                         {i > 0 && ', '}
-                        {facetLink(value, value === activeArea,
+                        {facetLink(`${value} (${count})`, value === activeArea,
                           () => onSelectArea(value === activeArea ? '' : value))}
                       </Fragment>
                     ))}
