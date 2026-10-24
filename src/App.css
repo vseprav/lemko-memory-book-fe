@@ -62,3 +62,18 @@
 .facet-link:hover {
   text-decoration: underline;
 }
+/* Header: a smaller logo on phones keeps the bar short */
+@media (max-width: 767.98px) {
+  .site-logo {
+    width: 128px;
+    height: auto;
+  }
+}
+/* Wikipedia card on the family page */
+.wikipedia-thumb {
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+  align-self: flex-start;
+  object-fit: cover;
+}

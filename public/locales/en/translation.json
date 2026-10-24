@@ -6,7 +6,8 @@
     "home": "Moloda Lemkivshchyna",
     "about": "About the project",
     "howToRead": "How to read the lists",
-    "language": "Language"
+    "language": "Language",
+    "menu": "Menu"
   },
   "howToRead": {
     "title": "How to read the lists",
@@ -75,6 +76,13 @@
     "areaEviction": "region of resettlement",
     "noteRow": "printed in the book instead of names; persons: {{count}}",
     "chsLegend": "ч/с — family member (член сім’ї), as marked in the book."
+  },
+  "wikipedia": {
+    "title": "{{name}} on Wikipedia",
+    "namePl": "Current Polish name",
+    "read": "Read on Wikipedia",
+    "notBook": "This information comes from Wikipedia, not from the Book of Memory.",
+    "attribution": "Text of the article"
   },
   "settlementInfo": {
     "book": "Book of Memory of the Lemko Region 1944–1946, vol. {{volume}}, list {{table}}",

@@ -1,6 +1,7 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from "react-router-dom";
+import Navbar from "react-bootstrap/Navbar";
 import AppPaths from "../config/AppPaths";
 import colors from "../theme/colors";
 import LanguageSwitcher from "../components/LanguageSwitcher";
@@ -14,39 +15,48 @@ const PageTemplate: FC<PageTemplateProps> = ({ sidebar, content }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const year = new Date().getFullYear();
+    // On narrow screens the links fold into a menu button; it closes again after a choice
+    const [menuOpen, setMenuOpen] = useState(false);
+    const go = (path: string) => {
+        setMenuOpen(false);
+        navigate(path);
+    };
 
     return (
-        <div className="container-xxl">
-            <div className="container-xxl row bg-white position-fixed top-0 z-3">
-                <div className="col-12">
-                    <nav className="navbar navbar-expand navbar-light">
-                            <Link to={AppPaths.home} className="navbar-brand">
-                                <img
-                                    width="180"
-                                    height="73"
-                                    src={`${process.env.PUBLIC_URL}/images/logo.png`}
-                                    alt="logo"
-                                />
-                            </Link>
-                            <ul className="nav justify-content-end align-items-center gap-2" style={{width: '100%'}}>
-                              <li className="nav-item">
-                                    <LanguageSwitcher/>
-                                </li>
-                              <li className="nav-item">
-                                    <button type="button" className="btn btn-outline-dark" onClick={() => navigate(AppPaths.howToRead)}>
-                                        {t('navbar.howToRead')}
-                                    </button>
-                                </li>
-                              <li className="nav-item">
-                                    <button type="button" className="btn btn-outline-dark" onClick={() => navigate(AppPaths.about)}>
-                                        {t('navbar.about')}
-                                    </button>
-                                </li>
-                            </ul>
-                    </nav>
-                </div>
-            </div>
-            <div className="row mx-2" style={{marginTop: 100, minHeight: 'calc(100vh - 140px)'}}>
+        <div className="container-xxl d-flex flex-column min-vh-100">
+            {/* Sticky, not fixed: the header takes its own height in the flow, so it never covers the page */}
+            <header className="sticky-top bg-white border-bottom site-header">
+                <Navbar expand="md" expanded={menuOpen} onToggle={setMenuOpen} className="px-2">
+                    <Link to={AppPaths.home} className="navbar-brand" onClick={() => setMenuOpen(false)}>
+                        <img
+                            className="site-logo"
+                            width="180"
+                            height="73"
+                            src={`${process.env.PUBLIC_URL}/images/logo.png`}
+                            alt={t('navbar.home')}
+                        />
+                    </Link>
+                    <Navbar.Toggle aria-controls="site-menu" aria-label={t('navbar.menu')}/>
+                    <Navbar.Collapse id="site-menu" className="justify-content-end">
+                        <ul className="navbar-nav align-items-md-center gap-2 py-2 py-md-0">
+                            <li className="nav-item">
+                                <LanguageSwitcher/>
+                            </li>
+                            <li className="nav-item">
+                                <button type="button" className="btn btn-outline-dark w-100" onClick={() => go(AppPaths.howToRead)}>
+                                    {t('navbar.howToRead')}
+                                </button>
+                            </li>
+                            <li className="nav-item">
+                                <button type="button" className="btn btn-outline-dark w-100" onClick={() => go(AppPaths.about)}>
+                                    {t('navbar.about')}
+                                </button>
+                            </li>
+                        </ul>
+                    </Navbar.Collapse>
+                </Navbar>
+            </header>
+            <div className="row mx-2 mt-3 flex-grow-1">
                 <main className="col-12 col-sm-8">
                     {content}
                 </main>

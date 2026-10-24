@@ -1,14 +1,16 @@
 import SidebarTemplate from "../templates/SidebarTemplate";
 import PageTemplate from "../templates/PageTemplate";
 import {useTranslation} from "react-i18next";
-import {Link, useParams} from "react-router-dom";
-import AppPaths from "../config/AppPaths";
+import {useParams} from "react-router-dom";
 import {getFamilyById} from "../api/getFamilyById";
 import {useEffect, useState} from "react";
 import {PersonItem} from "../api/search";
 import {FamilySettlement, getFamilySettlement} from "../api/getFamilySettlement";
 import LoadingSpinner from "../templates/LoadingSpinner";
 import SettlementCard from "../templates/SettlementCard";
+import WikipediaCard from "../templates/WikipediaCard";
+
+const MAX_WIKI_CARDS = 3;
 
 const Family = () => {
   const {t} = useTranslation();
@@ -32,6 +34,11 @@ const Family = () => {
   ].filter(Boolean).join(', ');
 
   const hasChs = family.some(item => item.family_role === 'ч/с');
+
+  // The village the book names for this family; for a joint list, each of the list's villages
+  const wikiPlaces = (settlement?.settlement ? [settlement.settlement] : settlement?.list_settlements ?? [])
+    .filter(place => place.wikipedia)
+    .slice(0, MAX_WIKI_CARDS);
 
   return (
     <PageTemplate content={
@@ -59,11 +66,9 @@ const Family = () => {
                 </li>
               ))}
             </ol>
-            <p className="text-muted small mt-2">
-              {hasChs && <>{t('family.chsLegend')} </>}
-              <Link to={AppPaths.howToRead}>{t('navbar.howToRead')}</Link>
-            </p>
+            {hasChs && <p className="text-muted small mt-2">{t('family.chsLegend')}</p>}
             {settlement && <div className="mt-4"><SettlementCard info={settlement}/></div>}
+            {wikiPlaces.map(place => <WikipediaCard key={place.id} settlement={place}/>)}
           </>
         )}
       </div>

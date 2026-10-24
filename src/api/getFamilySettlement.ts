@@ -15,6 +15,18 @@ export interface Settlement {
   powiat: string | null;
   gmina: string | null;
   printed: string;
+  // Not book data: the linked Wikipedia articles, where the link is unambiguous; null otherwise
+  wikipedia?: SettlementWikipedia | null;
+}
+
+export interface SettlementWikipedia {
+  wikidata_id: string;
+  // Article titles per Wikipedia language; null when that Wikipedia has no article
+  uk: string | null;
+  pl: string | null;
+  en: string | null;
+  // The current Polish name of the place (Wikidata label)
+  name_pl: string | null;
 }
 
 export interface SettlementList {

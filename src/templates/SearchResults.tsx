@@ -48,13 +48,13 @@ const SearchResults: FC<SearchResultsProps> = ({
       {searchResults && searchResults.length > 0 &&
           <div className="result-count mx-3 mb-5">
               <div className="row">
-                  <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.found')}</span></div>
-                  <div className="col-lg-9 col-5">{searchResultsCount} {t('home.people')}</div>
+                  <div className="col-12 col-sm-4 col-lg-3"><span className='fw-bold'>{t('home.found')}</span></div>
+                  <div className="col-12 col-sm-8 col-lg-9 mb-2 mb-sm-0">{searchResultsCount} {t('home.people')}</div>
               </div>
               {oblasts.length > 0 &&
                   <div className="row">
-                      <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.areaEviction')}</span></div>
-                      <div className="col-lg-9 col-5">
+                      <div className="col-12 col-sm-4 col-lg-3"><span className='fw-bold'>{t('home.areaEviction')}</span></div>
+                      <div className="col-12 col-sm-8 col-lg-9 mb-2 mb-sm-0">
                         {oblasts.map((o, i) => (
                           <Fragment key={o.id}>
                             {i > 0 && ', '}
@@ -66,8 +66,8 @@ const SearchResults: FC<SearchResultsProps> = ({
                   </div>}
               {settlements.length > 0 &&
                   <div className="row">
-                      <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.foundSettlements')}</span></div>
-                      <div className="col-lg-9 col-5">
+                      <div className="col-12 col-sm-4 col-lg-3"><span className='fw-bold'>{t('home.foundSettlements')}</span></div>
+                      <div className="col-12 col-sm-8 col-lg-9 mb-2 mb-sm-0">
                         {settlements.map((s, i) => (
                           <Fragment key={s.id}>
                             {i > 0 && ', '}
@@ -78,8 +78,8 @@ const SearchResults: FC<SearchResultsProps> = ({
                       </div>
                   </div>}
               <div className="row">
-                  <div className="col-lg-3 col-7"><span className='fw-bold'>{t('home.foundLastNames')}</span></div>
-                  <div className="col-lg-9 col-5">{uniqueLastNames}</div>
+                  <div className="col-12 col-sm-4 col-lg-3"><span className='fw-bold'>{t('home.foundLastNames')}</span></div>
+                  <div className="col-12 col-sm-8 col-lg-9 mb-2 mb-sm-0">{uniqueLastNames}</div>
               </div>
           </div>}
       <ol className="list-group list-group-flush">
