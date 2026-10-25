@@ -70,6 +70,14 @@
   }
 }
 /* Wikipedia card on the family page */
+.map-embed {
+  display: block;
+  width: 100%;
+  height: 300px;
+  border: 0;
+  margin-bottom: 0.5rem;
+}
+
 .wikipedia-thumb {
   width: 160px;
   max-width: 100%;

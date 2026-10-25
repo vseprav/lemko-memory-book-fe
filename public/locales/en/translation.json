@@ -84,6 +84,11 @@
     "notBook": "This information comes from Wikipedia, not from the Book of Memory.",
     "attribution": "Text of the article"
   },
+  "map": {
+    "title": "{{name}} on the map",
+    "open": "Open the full map",
+    "notBook": "The map of towns and villages of Zakerzonnia is made by MGO “Moloda Lemkivshchyna”; it is not part of the Book of Memory."
+  },
   "settlementInfo": {
     "book": "Book of Memory of the Lemko Region 1944–1946, vol. {{volume}}, list {{table}}",
     "bookPage": "Book of Memory of the Lemko Region 1944–1946, vol. {{volume}}, p. {{page}}",

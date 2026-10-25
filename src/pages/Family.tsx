@@ -9,6 +9,7 @@ import {FamilySettlement, getFamilySettlement} from "../api/getFamilySettlement"
 import LoadingSpinner from "../templates/LoadingSpinner";
 import SettlementCard from "../templates/SettlementCard";
 import WikipediaCard from "../templates/WikipediaCard";
+import MapCard from "../templates/MapCard";
 
 const MAX_WIKI_CARDS = 3;
 
@@ -36,9 +37,10 @@ const Family = () => {
   const hasChs = family.some(item => item.family_role === 'ч/с');
 
   // The village the book names for this family; for a joint list, each of the list's villages
-  const wikiPlaces = (settlement?.settlement ? [settlement.settlement] : settlement?.list_settlements ?? [])
-    .filter(place => place.wikipedia)
-    .slice(0, MAX_WIKI_CARDS);
+  const places = settlement?.settlement ? [settlement.settlement] : settlement?.list_settlements ?? [];
+  const wikiPlaces = places.filter(place => place.wikipedia).slice(0, MAX_WIKI_CARDS);
+  // One map is enough: a joint list's villages are neighbours
+  const mapPlace = places.find(place => place.map);
 
   return (
     <PageTemplate content={
@@ -68,6 +70,7 @@ const Family = () => {
             </ol>
             {hasChs && <p className="text-muted small mt-2">{t('family.chsLegend')}</p>}
             {settlement && <div className="mt-4"><SettlementCard info={settlement}/></div>}
+            {mapPlace && <MapCard settlement={mapPlace}/>}
             {wikiPlaces.map(place => <WikipediaCard key={place.id} settlement={place}/>)}
           </>
         )}

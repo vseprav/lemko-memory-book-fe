@@ -17,6 +17,15 @@ export interface Settlement {
   printed: string;
   // Not book data: the linked Wikipedia articles, where the link is unambiguous; null otherwise
   wikipedia?: SettlementWikipedia | null;
+  // Not book data: the village's point on the community map, where the match is unambiguous; null otherwise
+  map?: SettlementMapPoint | null;
+}
+
+export interface SettlementMapPoint {
+  // The placemark name on the map
+  name: string;
+  lat: number;
+  lng: number;
 }
 
 export interface SettlementWikipedia {
